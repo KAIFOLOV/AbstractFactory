@@ -16,6 +16,8 @@ add_executable(AbstractFactory
   Unit.h
   ClassUnit.h ClassUnit.cpp
   MethodUnit.h MethodUnit.cpp
+  IUnitFactory.h
+  CppUnitFactory.h CppUnitFactory.cpp
   main.cpp
 )
 target_link_libraries(AbstractFactory Qt${QT_VERSION_MAJOR}::Core)

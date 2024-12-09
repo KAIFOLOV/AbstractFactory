@@ -1,17 +1,21 @@
 #include "ClassUnit.h"
+#include "IUnitFactory.h"
+#include "CppUnitFactory.h"
 #include "MethodUnit.h"
 
 #include <QCoreApplication>
 
-class PrintOperatorUnit : public Unit {
-public:
-    explicit PrintOperatorUnit( const std::string& text ) : m_text( text ) { }
-    std::string compile( unsigned int level = 0 ) const {
-        return generateShift( level ) + "printf( \"" + m_text + "\" );\n";
-    }
-private:
-    std::string m_text;
-};
+void generateCode(const IUnitFactory& factory) {
+    auto classUnit = factory.createClassUnit("MyClass");
+    auto methodUnit = factory.createMethodUnit("myMethod", "void", MethodUnit::STATIC);
+
+    auto printOperator = factory.createPrintOperatorUnit("Hello, world!");
+
+    methodUnit->add(printOperator);
+    classUnit->add(methodUnit, ClassUnit::PUBLIC);
+
+    std::cout << classUnit->compile() << std::endl;
+}
 
 std::string generateProgram() {
     ClassUnit myClass("MyClass");
@@ -38,7 +42,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    std::cout << generateProgram() << std::endl;
+    CppUnitFactory cppFactory;
+
+    std::cout << "C++ Code:" << std::endl;
+    generateCode(cppFactory);
 
     return a.exec();
 }
